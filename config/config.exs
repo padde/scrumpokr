@@ -12,7 +12,8 @@ config :scrumpokr, ScrumpokrWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "jui8Ov+an+uVilQjqOAhKkaPOmhI8+kCAUTVPznEuTQT1O/iROG0j8sL1msSH99x",
   render_errors: [view: ScrumpokrWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Scrumpokr.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Scrumpokr.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [signing_salt: "lP1ekLx5df8J39A6BNsDcKvQp66gYvA+"]
 
 # Configures Elixir's Logger
 config :logger, :console,

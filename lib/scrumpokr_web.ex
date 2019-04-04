@@ -42,6 +42,8 @@ defmodule ScrumpokrWeb do
       import ScrumpokrWeb.ErrorHelpers
       import ScrumpokrWeb.Gettext
       alias ScrumpokrWeb.Router.Helpers, as: Routes
+
+      import Phoenix.LiveView, only: [live_render: 2, live_render: 3]
     end
   end
 
@@ -50,6 +52,8 @@ defmodule ScrumpokrWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+
+      import Phoenix.LiveView.Router
     end
   end
 
@@ -57,6 +61,12 @@ defmodule ScrumpokrWeb do
     quote do
       use Phoenix.Channel
       import ScrumpokrWeb.Gettext
+    end
+  end
+
+  def live do
+    quote do
+      use Phoenix.LiveView
     end
   end
 
