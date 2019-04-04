@@ -1,0 +1,31 @@
+<% user_vote = Map.get(@voting.votes, @user_id) %>
+<div>
+  <ul>
+    <%= for {_user_id, value} <- @voting.votes do %>
+      <li>
+        <%= if complete?(@voting) do %>
+          <%= List.keyfind(@voting.cards, value, 0) |> elem(1) %>
+        <% else %>
+          <%= if is_nil(value) do %>
+            waiting…
+          <% else %>
+            voted
+          <% end %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= if complete?(@voting) do %>
+    <button phx-click="reset">Reset</button>
+  <% else %>
+    <%= for {value, label} <- @voting.cards do %>
+      <button phx-click="vote"
+              phx-value="<%= value %>"
+              <%= if user_vote == value, do: "disabled" %>
+      ><%= label %></button>
+    <% end %>
+  <% end %>
+
+  <%# <pre><%= inspect @voting, pretty: true %1></pre> %>
+</div>

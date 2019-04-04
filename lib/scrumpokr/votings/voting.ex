@@ -1,0 +1,115 @@
+defmodule Scrumpokr.Votings.Voting do
+  use GenServer, restart: :transient
+
+  @abandoned_timeout 5000
+
+  defstruct [
+    id: nil,
+    cards: [
+      {"0"  , "0"},
+      {"0.5", "½"},
+      {"1"  , "1"},
+      {"2"  , "2"},
+      {"3"  , "3"},
+      {"5"  , "5"},
+      {"8"  , "8"},
+      {"13" , "13"},
+      {"20" , "20"},
+      {"40" , "40"},
+      {"100", "100"},
+      {"unknown", "?"},
+      {"infinity", "\u{221e}"},
+      {"pause", "\u{2615}"}
+    ],
+    votes: %{},
+    monitors: %{}
+  ]
+
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts[:id], opts)
+  end
+
+  def join(pid, user_id) do
+    GenServer.cast(pid, {:join, user_id})
+  end
+
+  def vote(pid, user_id, value) do
+    GenServer.cast(pid, {:vote, user_id, value})
+  end
+
+  def reset(pid) do
+    GenServer.cast(pid, :reset)
+  end
+
+  def leave(pid, user_id) do
+    GenServer.cast(pid, {:leave, user_id})
+  end
+
+  def get_state(pid) do
+    GenServer.call(pid, :get_state)
+  end
+
+  def monitor(pid, monitored_pid, callback_fun) do
+    GenServer.cast(pid, {:monitor, monitored_pid, callback_fun})
+  end
+
+  @impl true
+  def init(voting_id) do
+    {:ok, %__MODULE__{id: voting_id}}
+  end
+
+  @impl true
+  def handle_call(:get_state, _from, state) do
+    {:reply, state, state}
+  end
+
+  @impl true
+  def handle_cast({:join, user_id}, state) do
+    state = put_in(state.votes[user_id], nil)
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:vote, user_id, value}, state) do
+    state = put_in(state.votes[user_id], value)
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast(:reset, state) do
+    state = %{state |
+      votes: Enum.into(state.votes, %{}, fn {user_id, _vote} ->
+        {user_id, nil}
+      end)
+    }
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_cast({:leave, user_id}, state) do
+    {_vote, state} = pop_in(state.votes[user_id])
+    if Enum.empty? state.votes do
+      {:noreply, state, @abandoned_timeout}
+    else
+      {:noreply, state}
+    end
+  end
+
+  @impl true
+  def handle_cast({:monitor, monitored_pid, callback_fun}, state) do
+    ref = Process.monitor(monitored_pid)
+    {:noreply, put_in(state.monitors[ref], callback_fun)}
+  end
+
+  @impl true
+  def handle_info({:DOWN, ref, :process, _object, _reason}, state) do
+    {callback_fun, state} = pop_in(state.monitors[ref])
+    callback_fun.()
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_info(:timeout, state) do
+    {:stop, :normal, state}
+  end
+end

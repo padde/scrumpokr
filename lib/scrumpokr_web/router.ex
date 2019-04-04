@@ -19,6 +19,7 @@ defmodule ScrumpokrWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    live "/votings/:id", VotingLive, session: [:path_params, :user_id]
   end
 
   # Other scopes may use custom stacks.

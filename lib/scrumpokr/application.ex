@@ -8,6 +8,8 @@ defmodule Scrumpokr.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
+      {Registry, keys: :unique, name: Scrumpokr.Votings.Registry},
+      Scrumpokr.Votings.Supervisor,
       # Start the endpoint when the application starts
       ScrumpokrWeb.Endpoint
       # Starts a worker by calling: Scrumpokr.Worker.start_link(arg)
