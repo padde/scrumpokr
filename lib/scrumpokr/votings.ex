@@ -2,8 +2,17 @@ defmodule Scrumpokr.Votings do
   alias Scrumpokr.Votings.Supervisor
   alias Scrumpokr.Votings.Voting
 
+  @alphabet ~w[a b c d e f g h i j k l m n o p q r s t u v w x y z]
+
   def complete?(%Voting{} = voting) do
     voting.votes |> Map.values() |> Enum.all?(& &1)
+  end
+
+  def generate_random_id do
+    Stream.repeatedly(fn -> Enum.random(@alphabet) end)
+    |> Stream.take(9)
+    |> Stream.chunk_every(3)
+    |> Enum.join("-")
   end
 
   def join(voting_id, user_id) do

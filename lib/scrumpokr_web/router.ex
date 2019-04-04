@@ -19,6 +19,8 @@ defmodule ScrumpokrWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    post "/votings/create", VotingController, :create
     live "/votings/:id", VotingLive, session: [:path_params, :user_id]
   end
 
