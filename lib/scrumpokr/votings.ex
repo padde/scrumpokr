@@ -5,7 +5,12 @@ defmodule Scrumpokr.Votings do
   @alphabet ~w[a b c d e f g h i j k l m n o p q r s t u v w x y z]
 
   def complete?(%Voting{} = voting) do
-    voting.votes |> Map.values() |> Enum.all?(& &1)
+    Enum.count(voting.votes) > 0 &&
+      voting.votes |> Map.values() |> Enum.all?(& &1)
+  end
+
+  def participating?(%Voting{} = voting, user_id) do
+    Map.has_key?(voting.votes, user_id)
   end
 
   def generate_random_id do
