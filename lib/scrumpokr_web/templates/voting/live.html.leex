@@ -1,4 +1,3 @@
-<% user_vote = Map.get(@voting.votes, @user_id) %>
 <div>
   <ul>
     <%= for {_user_id, value} <- @voting.votes do %>
@@ -17,12 +16,12 @@
   </ul>
 
   <%= if complete?(@voting) do %>
-    <button phx-click="reset">Reset</button>
+    <button phx-click="reset" data-confirm="Do you really want to clear all votes?">Clear votes</button>
   <% else %>
     <%= for {value, label} <- @voting.cards do %>
       <button phx-click="vote"
               phx-value="<%= value %>"
-              <%= if user_vote == value, do: "disabled" %>
+              <%= if Map.get(@voting.votes, @user_id) == value, do: "disabled" %>
       ><%= label %></button>
     <% end %>
   <% end %>
