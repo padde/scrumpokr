@@ -4,24 +4,27 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Scrumpokr · Phoenix Framework</title>
+    <title>scrumpo.kr</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link href="https://fonts.googleapis.com/css?family=Signika:700|Source+Sans+Pro" rel="stylesheet">
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-          </ul>
-        </nav>
-        <h1>scrumpo.kr</h1>
-      </section>
+    <header class="site-header container">
+      <h1><a href="/">scrumpo.kr</a></h1>
     </header>
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
       <%= render @view_module, @view_template, assigns %>
     </main>
+    <footer class="footer">
+      <section class="container">
+        <p>
+          Built with <a target="_blank" href="https://github.com/phoenixframework/phoenix_live_view">Phoenix LiveView</a>
+          and ♥ by <a target="_blank" href="http://patrickoscity.de">Patrick Oscity</a>.
+        </p>
+      </section>
+    </footer>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

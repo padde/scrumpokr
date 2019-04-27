@@ -1,0 +1,41 @@
+// Based on ../../deps/phoenix_live_view/assets/css/live_view.css"
+.phx-disconnected {
+  opacity: 0.4;
+  cursor: wait;
+}
+
+.phx-disconnected * {
+  pointer-events: none;
+}
+
+.phx-error {
+  &::before {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: $color-error;
+    content: "An error occurred, please try again."
+  }
+}
+
+// Based on https://ariya.io/2017/10/fun-with-single-element-css-spinner
+.phx-loader {
+  $color: $color-secondary;
+  $size: 50px;
+  $stroke: 6px;
+  position: relative;
+  display: none;
+  left: calc(50% - #{$size/2});
+  border-radius: 50%;
+  width: $size;
+  height: $size;
+  border: $stroke solid rgba($color, 0.2);
+  border-top: $stroke solid $color;
+  animation: loading 1.3s infinite cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+
+@keyframes loading {
+  100% {
+    transform: rotate(360deg);
+  }
+}

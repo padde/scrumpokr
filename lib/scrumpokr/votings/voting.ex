@@ -22,7 +22,8 @@ defmodule Scrumpokr.Votings.Voting do
       {"pause", "\u{2615}"}
     ],
     votes: %{},
-    monitors: %{}
+    monitors: %{},
+    force_reveal: false
   ]
 
   def start_link(opts) do
@@ -35,6 +36,10 @@ defmodule Scrumpokr.Votings.Voting do
 
   def vote(pid, user_id, value) do
     GenServer.cast(pid, {:vote, user_id, value})
+  end
+
+  def force_reveal(pid) do
+    GenServer.cast(pid, :force_reveal)
   end
 
   def reset(pid) do
@@ -76,8 +81,15 @@ defmodule Scrumpokr.Votings.Voting do
   end
 
   @impl true
+  def handle_cast(:force_reveal, state) do
+    state = put_in(state.force_reveal, true)
+    {:noreply, state}
+  end
+
+  @impl true
   def handle_cast(:reset, state) do
     state = %{state |
+      force_reveal: false,
       votes: Enum.into(state.votes, %{}, fn {user_id, _vote} ->
         {user_id, nil}
       end)

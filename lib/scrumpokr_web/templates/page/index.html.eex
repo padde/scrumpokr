@@ -1,6 +1,11 @@
 <section class="row">
   <article class="column">
-    <h2>Create a voting</h2>
-    <%= button "Get started", to: Routes.voting_path(@conn, :create) %>
+    <div class="announcement">
+      <p>
+        Online <a target="_blank" href="https://en.wikipedia.org/wiki/Planning_poker">Scrum poker</a>
+        for remote software development teams.
+      </p>
+      <%= button "Let’s get started", to: Routes.voting_path(@conn, :create) %>
+    </div>
   </article>
 </section>

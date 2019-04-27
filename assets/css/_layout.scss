@@ -1,0 +1,31 @@
+body {
+  background: #d1e2cf;
+}
+
+.container{
+  margin: 0 auto;
+  max-width: 80.0rem;
+  padding: 0 2.0rem;
+  position: relative;
+  width: 100%
+}
+
+.site-header h1 {
+  color: $color-primary;
+  a:hover {
+    color: inherit;
+  }
+}
+
+.footer {
+  margin-top: 4em;
+  text-align: center;
+}
+
+.announcement {
+  text-align: center;
+  font-size: 150%;
+  padding: 4em 0;
+  margin: 0 auto;
+  max-width: 400px;
+}

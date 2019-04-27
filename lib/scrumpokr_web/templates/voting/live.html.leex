@@ -1,45 +1,80 @@
 <div>
-  <div class="float-right">
-    <%= if participating?(@voting, @user_id) do %>
-      If you don't want to actively participate, you can
-      <a href="#" phx-click="become_observer">just watch</a>.
-    <% else %>
-      You are just watching, but you can
-      <a href="#" phx-click="become_voter">become a voter again</a>.
-    <% end %>
-  </div>
-
-  <%= if Enum.empty?(@voting.votes) do %>
-    <p>Nobody is participating yet.</p>
-  <% end %>
-  <ul>
-    <%= for {_user_id, value} <- @voting.votes do %>
-      <li>
-        <%= if complete?(@voting) do %>
-          <%= List.keyfind(@voting.cards, value, 0) |> elem(1) %>
-        <% else %>
-          <%= if is_nil(value) do %>
-            ⏳
-          <% else %>
-            voted
-          <% end %>
+  <ul class="cards">
+    <%= for {user_id, value} <- @voting.votes do %>
+      <li class="card-placeholder-container">
+        <div class="card-placeholder">?</div>
+        <%= unless is_nil(value) do %>
+          <div class="
+            card
+            <%= if user_id == @user_id, do: "mine" %>
+            <%= unless revealed?(@voting), do: "flipped" %>
+          ">
+            <div class="card-body">
+              <div class="card-face card-front">
+                <%= if revealed?(@voting) || user_id == @user_id do %>
+                  <span class="card-label primary"><%= card_label(@voting, value) %></span>
+                  <span class="card-label secondary top-left" aria-hidden="true"><%= card_label(@voting, value) %></span>
+                  <span class="card-label secondary bottom-right" aria-hidden="true"><%= card_label(@voting, value) %></span>
+                <% end %>
+              </div>
+              <div class="card-face card-back">&nbsp;</div>
+            </div>
+          </div>
         <% end %>
       </li>
     <% end %>
   </ul>
 
-  <%= if participating?(@voting, @user_id) && !complete?(@voting) do %>
-    <%= for {value, label} <- @voting.cards do %>
-      <button phx-click="vote"
-              phx-value="<%= value %>"
-              <%= if Map.get(@voting.votes, @user_id) == value, do: "disabled" %>
-      ><%= label %></button>
+  <%= if revealed?(@voting) do %>
+    <div class="voting-instruction">
+    Check the results above ☝️
+    <br>
+    <button class="button" phx-click="reset">Start a new round</button>
+    </div>
+  <% else %>
+    <%= if ready?(@voting) do %>
+      <%= if voted?(@voting, @user_id) do %>
+        <div class="voting-instruction">Waiting for the others to finish ⏳</div>
+      <% else %>
+        <%= if participating?(@voting, @user_id) do %>
+          <div class="voting-instruction">Choose your estimate 👇</div>
+        <% end %>
+      <% end %>
+    <% else %>
+      <p class="voting-instruction">
+        Share this page with your team to start voting 🤗
+      </p>
     <% end %>
   <% end %>
 
-  <%= if complete?(@voting) do %>
-    <button phx-click="reset" data-confirm="Do you really want to clear all votes?">Clear votes</button>
+  <%= if participating?(@voting, @user_id) && !revealed?(@voting) do %>
+    <div class="cards">
+      <%= for {value, label} <- @voting.cards do %>
+        <button
+          class="card interactive <%= if Map.get(@voting.votes, @user_id) == value, do: "hidden" %>"
+          phx-click="vote"
+          phx-value="<%= value %>"
+        >
+          <div class="card-body">
+            <div class="card-face card-front">
+              <span class="card-label primary"><%= label %></span>
+              <span class="card-label secondary top-left" aria-hidden="true"><%= label %></span>
+              <span class="card-label secondary bottom-right" aria-hidden="true"><%= label %></span>
+            </div>
+          </div>
+        </button>
+      <% end %>
+    </div>
   <% end %>
 
-  <%# <pre><%= inspect @voting, pretty: true %1></pre> %>
+  <div class="voting-controls">
+    <%= if voted?(@voting) && !revealed?(@voting) do %>
+      <button class="button button-clear" phx-click="force_reveal">Force reveal</button>
+    <% end %>
+    <%= if participating?(@voting, @user_id) do %>
+      <button class="button button-clear" phx-click="become_observer">Just watch</button>
+    <% else %>
+      <button class="button button-clear" phx-click="become_voter">Become a voter</button>
+    <% end %>
+  </div>
 </div>

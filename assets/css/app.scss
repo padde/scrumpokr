@@ -1,0 +1,18 @@
+/* This file is for your main application css. */
+
+$color-initial: #fff;
+$color-primary: #6d135a;
+$color-secondary: #606c76;
+$color-tertiary: #d1e2cf;
+$color-quaternary: #d1d1d1;
+$color-quinary: #e1e1e1;
+$color-error: #d4043a;
+
+@import "~normalize.css/normalize.css";
+@import "~milligram/src/milligram.sass";
+
+@import "typography";
+@import "layout";
+@import "cards";
+@import "voting";
+@import "live-view";

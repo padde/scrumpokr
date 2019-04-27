@@ -54,6 +54,13 @@ defmodule ScrumpokrWeb.VotingLive do
   end
 
   @impl true
+  def handle_event("force_reveal", _value, socket) do
+    Votings.force_reveal(socket.assigns[:voting_id])
+    PubSub.broadcast @pubsub, topic(socket), :refresh
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("reset", _value, socket) do
     Votings.reset(socket.assigns[:voting_id])
     PubSub.broadcast @pubsub, topic(socket), :refresh

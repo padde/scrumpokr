@@ -21,7 +21,7 @@ defmodule ScrumpokrWeb.Router do
     get "/", PageController, :index
 
     post "/votings/create", VotingController, :create
-    live "/votings/:id", VotingLive, session: [:path_params, :user_id]
+    live "/:id", VotingLive, session: [:path_params, :user_id]
   end
 
   # Other scopes may use custom stacks.

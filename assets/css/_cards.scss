@@ -1,0 +1,173 @@
+$card-width: 7rem;
+$card-height: 7rem * 1.4;
+
+.cards {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 7rem);
+  grid-gap: 1rem;
+  justify-content: space-between;
+  margin: -0.3rem;
+  padding-bottom: 4rem;
+}
+
+.card {
+  position: relative;
+  perspective: 1000px;
+  width: $card-width;
+  height: $card-height;
+
+  font-size: 100%;
+  padding: 0;
+  border: none;
+
+  @for $i from 1 through 7 {
+    &:nth-child(7n+#{$i}) {
+      transform: rotate((random()*3-1.5)+deg);
+    }
+  }
+
+  &.interactive {
+    cursor: pointer;
+    transition: transform 0.1s;
+    &:hover, &:active, &:focus {
+      background: #fff;
+      border-color: #fff;
+      color: $color-primary;
+    }
+
+    &:hover {
+      z-index: 1;
+      @for $i from 1 through 7 {
+        &:nth-child(7n+#{$i}) {
+          transform: scale(1.2) rotate((random()*8-4)+deg);
+        }
+      }
+    }
+  }
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &.flipped .card-body {
+    transform: rotateY(180deg);
+  }
+
+  .cards:hover &.mine .card-body {
+    transform: rotateY(0deg);
+  }
+
+  .card-body {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: 0.3s;
+    width: $card-width;
+    height: $card-height;
+  }
+
+  .card-front, .card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: $card-width;
+    height: $card-height;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .card-front {
+    transform: rotateY(0deg);
+  }
+
+  .card-back {
+    z-index: 2;
+    transform: rotateY(180deg);
+  }
+}
+
+.card-face {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3rem;
+  background: #fff;
+  border-radius: 0.35rem;
+  font-size: 100%;
+  color: $color-primary;
+  border: 0.4rem solid #fff;
+
+  background: #fff;
+  border-radius: 0.35rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+  &.card-back {
+    $scale: 0.4;
+    $color-fg: darken($color-tertiary, 20%);
+    $color-lines: rgba($color-primary, 0.2);
+    // based on https://leaverou.github.io/css3patterns/#argyle
+    background-color: $color-tertiary;
+    background-image:
+      repeating-linear-gradient(120deg, $color-lines, $color-lines 1px, transparent 1px, transparent 60px*$scale),
+      repeating-linear-gradient(60deg, $color-lines, $color-lines 1px, transparent 1px, transparent 60px*$scale),
+      linear-gradient(60deg, $color-fg 25%, transparent 25%, transparent 75%, $color-fg 75%, $color-fg),
+      linear-gradient(120deg, $color-fg 25%, transparent 25%, transparent 75%, $color-fg 75%, $color-fg);
+    background-size: (70px*$scale) (120px*$scale);
+    background-position: center;
+  }
+}
+
+.card-placeholder-container {
+  position: relative;
+  height: $card-height;
+  @for $i from 1 through 7 {
+    &:nth-child(7n+#{$i}) .card {
+      transform: rotate((random()*4-2)+deg);
+    }
+  }
+}
+
+.card-placeholder {
+  position: absolute;
+  top: 0;
+  width: $card-width;
+  height: $card-height;
+  box-shadow: none;
+  border: 3px dashed rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.5);
+  font-weight: bold;
+  font-size: 300%;
+  font-family: $display-font;
+  text-align: center;
+  line-height: $card-height;
+}
+
+.card-label {
+  &.primary {
+    font-size: 200%;
+    font-weight: bold;
+    font-family: $display-font;
+    color: $color-primary;
+  }
+
+  &.secondary {
+    font-size: 50%;
+    font-weight: bold;
+    font-family: $text-font;
+    line-height: 1;
+    position: absolute;
+    color: $color-secondary;
+
+    &.top-left {
+      top: 0.2rem;
+      left: 0.2rem;
+    }
+
+    &.bottom-right {
+      bottom: 0.2rem;
+      right: 0.2rem;
+      transform: rotate(180deg);
+    }
+  }
+}
