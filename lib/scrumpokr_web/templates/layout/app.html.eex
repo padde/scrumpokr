@@ -4,6 +4,8 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Online Scrum poker for remote software development teams."/>
+    <meta name="keywords" content="scrum,kanban,agile,poker,estimation,planning,remote,software,development"/>
     <title>scrumpo.kr</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <link href="https://fonts.googleapis.com/css?family=Signika:700|Source+Sans+Pro" rel="stylesheet">
