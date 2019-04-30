@@ -8,6 +8,7 @@ defmodule ScrumpokrWeb.Router do
     plug Phoenix.LiveView.Flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug ScrumpokrWeb.SecureBrowserHeaders
     plug :put_layout, {ScrumpokrWeb.LayoutView, "app.html"}
   end
 
