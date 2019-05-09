@@ -2,11 +2,9 @@ defmodule ScrumpokrWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :scrumpokr
 
   socket "/socket", ScrumpokrWeb.UserSocket,
-    websocket: [timeout: 45_000],
     longpoll: false
 
-  socket "/live", Phoenix.LiveView.Socket,
-    websocket: [timeout: 45_000]
+  socket "/live", Phoenix.LiveView.Socket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
