@@ -1,6 +1,10 @@
 defmodule ScrumpokrWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :scrumpokr
 
+  if Mix.env == :prod do
+    plug ScrumpokrWeb.CanonicalDomain
+  end
+
   socket "/socket", ScrumpokrWeb.UserSocket,
     longpoll: false
 
