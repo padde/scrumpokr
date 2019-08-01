@@ -1,5 +1,7 @@
 # Scrumpokr
 
+![Screenshot](doc/screenshot.png)
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
