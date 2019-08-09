@@ -45,10 +45,6 @@ defmodule Scrumpokr.Votings do
     name(voting_id) |> Voting.join(user_id)
   end
 
-  def monitor(voting_id, callback_fun) do
-    name(voting_id) |> Voting.monitor(self(), callback_fun)
-  end
-
   def get_state(voting_id) do
     name(voting_id) |> Voting.get_state()
   end

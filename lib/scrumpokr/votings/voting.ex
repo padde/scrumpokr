@@ -21,7 +21,6 @@ defmodule Scrumpokr.Votings.Voting do
               {"pause", "\u{2615}"}
             ],
             votes: %{},
-            monitors: %{},
             force_reveal: false
 
   def start_link(opts) do
@@ -50,10 +49,6 @@ defmodule Scrumpokr.Votings.Voting do
 
   def get_state(pid) do
     GenServer.call(pid, :get_state)
-  end
-
-  def monitor(pid, monitored_pid, callback_fun) do
-    GenServer.cast(pid, {:monitor, monitored_pid, callback_fun})
   end
 
   @impl true
@@ -107,19 +102,6 @@ defmodule Scrumpokr.Votings.Voting do
     else
       {:noreply, state}
     end
-  end
-
-  @impl true
-  def handle_cast({:monitor, monitored_pid, callback_fun}, state) do
-    ref = Process.monitor(monitored_pid)
-    {:noreply, put_in(state.monitors[ref], callback_fun)}
-  end
-
-  @impl true
-  def handle_info({:DOWN, ref, :process, _object, _reason}, state) do
-    {callback_fun, state} = pop_in(state.monitors[ref])
-    callback_fun.()
-    {:noreply, state}
   end
 
   @impl true

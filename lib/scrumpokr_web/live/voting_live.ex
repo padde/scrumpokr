@@ -2,11 +2,6 @@ defmodule ScrumpokrWeb.VotingLive do
   use ScrumpokrWeb, :live
 
   alias Scrumpokr.Votings
-  alias Phoenix.PubSub
-
-  @pubsub Application.fetch_env!(:scrumpokr, ScrumpokrWeb.Endpoint)
-          |> Keyword.fetch!(:pubsub)
-          |> Keyword.fetch!(:name)
 
   @impl true
   def render(assigns) do
@@ -19,61 +14,43 @@ defmodule ScrumpokrWeb.VotingLive do
       socket
       |> assign(:voting_id, session.path_params["id"])
       |> assign(:user_id, socket.id)
-
     Votings.join(socket.assigns[:voting_id], socket.assigns[:user_id])
-
-    Votings.monitor(socket.assigns[:voting_id], fn ->
-      Votings.leave(socket.assigns[:voting_id], socket.assigns[:user_id])
-      PubSub.broadcast(@pubsub, topic(socket), :refresh)
-      PubSub.unsubscribe(@pubsub, topic(socket))
-    end)
-
-    PubSub.subscribe(@pubsub, topic(socket))
-    PubSub.broadcast_from(@pubsub, self(), topic(socket), :refresh)
     {:ok, refresh(socket)}
   end
 
   @impl true
   def handle_event("vote", value, socket) do
     Votings.vote(socket.assigns[:voting_id], socket.assigns[:user_id], value)
-    PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("become_observer", _value, socket) do
     Votings.leave(socket.assigns[:voting_id], socket.assigns[:user_id])
-    PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("become_voter", _value, socket) do
     Votings.join(socket.assigns[:voting_id], socket.assigns[:user_id])
-    PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("force_reveal", _value, socket) do
     Votings.force_reveal(socket.assigns[:voting_id])
-    PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("reset", _value, socket) do
     Votings.reset(socket.assigns[:voting_id])
-    PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
+  @impl true
   def handle_info(:refresh, socket) do
-    {:noreply, refresh(socket)}
-  end
-
-  defp topic(socket) do
-    "voting:#{socket.assigns[:voting_id]}"
+    {:noreply, socket}
   end
 
   defp refresh(socket) do
