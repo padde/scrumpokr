@@ -3,28 +3,26 @@ defmodule Scrumpokr.Votings.Voting do
 
   @abandoned_timeout 5000
 
-  defstruct [
-    id: nil,
-    cards: [
-      {"0"  , "0"},
-      {"0.5", "½"},
-      {"1"  , "1"},
-      {"2"  , "2"},
-      {"3"  , "3"},
-      {"5"  , "5"},
-      {"8"  , "8"},
-      {"13" , "13"},
-      {"20" , "20"},
-      {"40" , "40"},
-      {"100", "100"},
-      {"unknown", "?"},
-      {"infinity", "\u{221e}"},
-      {"pause", "\u{2615}"}
-    ],
-    votes: %{},
-    monitors: %{},
-    force_reveal: false
-  ]
+  defstruct id: nil,
+            cards: [
+              {"0", "0"},
+              {"0.5", "½"},
+              {"1", "1"},
+              {"2", "2"},
+              {"3", "3"},
+              {"5", "5"},
+              {"8", "8"},
+              {"13", "13"},
+              {"20", "20"},
+              {"40", "40"},
+              {"100", "100"},
+              {"unknown", "?"},
+              {"infinity", "\u{221e}"},
+              {"pause", "\u{2615}"}
+            ],
+            votes: %{},
+            monitors: %{},
+            force_reveal: false
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts[:id], opts)
@@ -88,19 +86,23 @@ defmodule Scrumpokr.Votings.Voting do
 
   @impl true
   def handle_cast(:reset, state) do
-    state = %{state |
-      force_reveal: false,
-      votes: Enum.into(state.votes, %{}, fn {user_id, _vote} ->
-        {user_id, nil}
-      end)
+    state = %{
+      state
+      | force_reveal: false,
+        votes:
+          Enum.into(state.votes, %{}, fn {user_id, _vote} ->
+            {user_id, nil}
+          end)
     }
+
     {:noreply, state}
   end
 
   @impl true
   def handle_cast({:leave, user_id}, state) do
     {_vote, state} = pop_in(state.votes[user_id])
-    if Enum.empty? state.votes do
+
+    if Enum.empty?(state.votes) do
       {:noreply, state, @abandoned_timeout}
     else
       {:noreply, state}

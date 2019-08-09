@@ -11,6 +11,7 @@ defmodule Scrumpokr.Votings do
   def revealed?(%Voting{force_reveal: true}) do
     true
   end
+
   def revealed?(%Voting{} = voting) do
     ready?(voting) &&
       voting.votes |> Map.values() |> Enum.all?(& &1)
@@ -21,7 +22,7 @@ defmodule Scrumpokr.Votings do
   end
 
   def voted?(%Voting{} = voting, user_id) do
-    not is_nil Map.get(voting.votes, user_id)
+    not is_nil(Map.get(voting.votes, user_id))
   end
 
   def participating?(%Voting{} = voting, user_id) do
@@ -40,6 +41,7 @@ defmodule Scrumpokr.Votings do
       {:ok, pid} -> {:ok, pid}
       {:error, {:already_started, pid}} -> {:ok, pid}
     end
+
     name(voting_id) |> Voting.join(user_id)
   end
 

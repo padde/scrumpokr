@@ -9,6 +9,7 @@ defmodule ScrumpokrWeb.CanonicalDomain do
 
   def call(conn, _options) do
     current_url = Conn.request_url(conn)
+
     if canonical?(current_url) do
       conn
     else
@@ -20,17 +21,19 @@ defmodule ScrumpokrWeb.CanonicalDomain do
   end
 
   defp canonical?(current_url) do
-    String.starts_with?(current_url, Endpoint.url)
+    String.starts_with?(current_url, Endpoint.url())
   end
 
   defp canonicalize(current_url) do
-    base = Endpoint.struct_url
+    base = Endpoint.struct_url()
     current = URI.parse(current_url)
-    %{current | scheme: base.scheme, authority: base.authority, host: base.host, port: base.port}
-    |> URI.to_string
-  end
 
-  defp canonical_base_url do
-    Endpoint.url()
+    URI.to_string(%{
+      current
+      | scheme: base.scheme,
+        authority: base.authority,
+        host: base.host,
+        port: base.port
+    })
   end
 end
