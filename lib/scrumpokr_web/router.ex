@@ -12,10 +12,6 @@ defmodule ScrumpokrWeb.Router do
     plug :put_layout, {ScrumpokrWeb.LayoutView, "app.html"}
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/", ScrumpokrWeb do
     pipe_through :browser
 
@@ -24,9 +20,4 @@ defmodule ScrumpokrWeb.Router do
     post "/votings/create", VotingController, :create
     live "/:id", VotingLive, session: [:path_params, :user_id]
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", ScrumpokrWeb do
-  #   pipe_through :api
-  # end
 end
