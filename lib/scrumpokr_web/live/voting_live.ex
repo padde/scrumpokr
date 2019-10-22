@@ -34,35 +34,35 @@ defmodule ScrumpokrWeb.VotingLive do
   end
 
   @impl true
-  def handle_event("vote", value, socket) do
+  def handle_event("vote", %{"card-value" => value}, socket) do
     Votings.vote(socket.assigns[:voting_id], socket.assigns[:user_id], value)
     PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("become_observer", _value, socket) do
+  def handle_event("become_observer", _params, socket) do
     Votings.leave(socket.assigns[:voting_id], socket.assigns[:user_id])
     PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("become_voter", _value, socket) do
+  def handle_event("become_voter", _params, socket) do
     Votings.join(socket.assigns[:voting_id], socket.assigns[:user_id])
     PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("force_reveal", _value, socket) do
+  def handle_event("force_reveal", _params, socket) do
     Votings.force_reveal(socket.assigns[:voting_id])
     PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("reset", _value, socket) do
+  def handle_event("reset", _params, socket) do
     Votings.reset(socket.assigns[:voting_id])
     PubSub.broadcast(@pubsub, topic(socket), :refresh)
     {:noreply, socket}

@@ -39,7 +39,7 @@ defmodule Scrumpokr.MixProject do
       {:gettext, "~> 0.17"},
       {:jason, "~> 1.1.2"},
       {:plug_cowboy, "~> 2.1.0"},
-      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view", ref: "527089b"}
+      {:phoenix_live_view, "~> 0.3.1"}
     ]
   end
 end

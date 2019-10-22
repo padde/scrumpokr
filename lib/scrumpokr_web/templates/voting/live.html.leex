@@ -53,7 +53,7 @@
         <button
           class="card interactive <%= if Map.get(@voting.votes, @user_id) == value, do: "hidden" %>"
           phx-click="vote"
-          phx-value="<%= value %>"
+          phx-value-card-value="<%= value %>"
         >
           <div class="card-body">
             <div class="card-face card-front">
